@@ -9,6 +9,7 @@ export function useProducts() {
   const listApi = useApi<Page<ProductListResponse>>()
   const { execute: executeList } = listApi
   const itemApi = useApi<ProductResponse>()
+  const { execute: executeItem } = itemApi
   const { execute: executePopular } = useApi<ProductListResponse[]>()
   const { execute: executeRelated } = useApi<ProductListResponse[]>()
   const [products, setProducts] = useState<ProductListResponse[]>([])
@@ -35,9 +36,15 @@ export function useProducts() {
     if (data) setRelated(data)
   }, [executeRelated])
 
-  const getProduct = (id: number) => itemApi.execute(() => productsApi.getProduct(id))
+  const getProduct = useCallback(
+    (id: number) => executeItem(() => productsApi.getProduct(id)),
+    [executeItem]
+  )
 
-  const getProductBySlug = (slug: string) => itemApi.execute(() => productsApi.getProductBySlug(slug))
+  const getProductBySlug = useCallback(
+    (slug: string) => executeItem(() => productsApi.getProductBySlug(slug)),
+    [executeItem]
+  )
 
   return {
     products,
