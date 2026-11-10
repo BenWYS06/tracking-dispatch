@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 
 interface UseDelayedLoadingOptions {
+  /** Time (ms) to wait before showing the loader. Default: 150 */
   delay?: number
+  /** Once shown, keep the loader visible at least this long (ms). Default: 300 */
   minDisplayTime?: number
 }
 
+/**
+ * Smooths a raw `isLoading` flag for UI display.
+ *
+ * Requests that finish within `delay` never show a loader, and a loader that
+ * does appear stays for at least `minDisplayTime`, so it doesn't flash.
+ */
 export function useDelayedLoading(isLoading: boolean, options: UseDelayedLoadingOptions = {}) {
   const { delay = 150, minDisplayTime = 300 } = options
   const [showLoading, setShowLoading] = useState(false)
