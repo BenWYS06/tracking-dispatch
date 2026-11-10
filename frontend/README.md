@@ -1,75 +1,65 @@
-# React + TypeScript + Vite
+# Sushi Shop — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + TypeScript SPA for the Sushi Shop storefront and admin panel,
+built with Vite and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js **24** (same version as CI and the Docker image)
+- Backend running on `http://localhost:8080` (see the [root README](../README.md))
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm ci
+npm run dev        # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The dev server proxies `/api` (REST) and `/ws` (WebSocket / STOMP) to the
+backend, so no extra env configuration is needed locally.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Command           | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `npm run dev`     | Start Vite dev server with HMR              |
+| `npm run build`   | Type-check (`tsc -b`) and build to `dist/`  |
+| `npm run lint`    | Run ESLint                                  |
+| `npm run preview` | Serve the production build locally          |
+
+## Project structure
 
 ```
+src/
+├── api/          # Axios client + one module per backend resource
+├── components/   # Reusable UI, grouped by feature (Home, Product, Admin, UI…)
+├── context/      # Auth, Cart and Notification providers
+├── hooks/
+│   ├── common/   # Generic hooks (useApi, usePagination, useTheme…)
+│   └── features/ # Domain hooks (useProducts, useOrders, useWebSocket…)
+├── layout/       # Page shells (header / footer)
+├── pages/        # Route-level components
+├── styles/       # Global CSS variables
+└── types/        # DTO types mirroring backend responses
+```
+
+### Conventions
+
+- Components use **CSS Modules** (`*.module.css`) next to the `.tsx` file.
+- All HTTP calls go through `api/client.ts`, which attaches the JWT and
+  redirects to `/login` on `401`.
+- Data fetching in components goes through `useApi` (or a feature hook built
+  on it) to get consistent loading / error handling and toasts.
+
+## Docker
+
+The production image is a two-stage build: Node builds the static assets,
+then nginx serves them and proxies `/api` and `/ws` to the backend
+(see `nginx.conf`).
+
+```bash
+docker build -t sushi-frontend .
+```
+
+Images are built and published by the **Frontend** GitHub Actions workflow
+on every push to `main`.
