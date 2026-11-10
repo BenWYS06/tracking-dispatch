@@ -10,9 +10,10 @@ export default function OrderSuccessPage() {
   const orderId = searchParams.get("orderId");
   const { clearCart } = useCart();
 
+  // Payment succeeded, so the cart is no longer needed.
   useEffect(() => {
     clearCart();
-  }, []);
+  }, [clearCart]);
 
   return (
     <div className={styles.page}>
