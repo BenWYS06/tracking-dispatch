@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react'
+import { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
 export type NotificationType = 'success' | 'error' | 'warning' | 'info'
 
@@ -52,12 +52,23 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setTimeout(() => removeNotification(id), 300)
   }, [removeNotification])
 
+  // Clear any pending auto-dismiss timers when the provider unmounts.
   useEffect(() => {
-    return () => timeoutsRef.current.forEach(timeout => clearTimeout(timeout))
+    const timeouts = timeoutsRef.current
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout))
+      timeouts.clear()
+    }
   }, [])
 
+  // Memoize so consumers only re-render when the notification list changes.
+  const value = useMemo(
+    () => ({ notifications, showNotification, hideNotification }),
+    [notifications, showNotification, hideNotification]
+  )
+
   return (
-    <NotificationContext.Provider value={{ notifications, showNotification, hideNotification }}>
+    <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
   )
