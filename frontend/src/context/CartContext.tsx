@@ -25,11 +25,20 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
+// A corrupted or hand-edited "cart" entry must not crash the whole app on load.
+function loadSavedCart(): CartItem[] {
+  try {
     const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+    const parsed: unknown = saved ? JSON.parse(saved) : [];
+    return Array.isArray(parsed) ? (parsed as CartItem[]) : [];
+  } catch {
+    localStorage.removeItem("cart");
+    return [];
+  }
+}
+
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [items, setItems] = useState<CartItem[]>(loadSavedCart);
 
   const addItem = useCallback((item: CartItem) => {
     setItems((prev) => {
