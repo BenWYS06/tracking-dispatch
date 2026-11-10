@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
+import Loading from '../../UI/Loading/Loading'
 import AdminSidebar from '../AdminSidebar/AdminSidebar'
 import AdminHeader from '../AdminHeader/AdminHeader'
 import styles from './AdminLayout.module.css'
@@ -32,7 +33,10 @@ export default function AdminLayout() {
         <AdminHeader onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
 
         <main className={styles.content}>
-          <Outlet />
+          {/* Pages are lazy-loaded; keep sidebar/header visible while they load */}
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
         </main>
 
         <footer className={styles.adminFooter}>
