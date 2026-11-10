@@ -7,32 +7,33 @@ import type { Page } from '../../types/common'
 
 export function useProducts() {
   const listApi = useApi<Page<ProductListResponse>>()
+  const { execute: executeList } = listApi
   const itemApi = useApi<ProductResponse>()
-  const popularApi = useApi<ProductListResponse[]>()
-  const relatedApi = useApi<ProductListResponse[]>()
+  const { execute: executePopular } = useApi<ProductListResponse[]>()
+  const { execute: executeRelated } = useApi<ProductListResponse[]>()
   const [products, setProducts] = useState<ProductListResponse[]>([])
   const [popular, setPopular] = useState<ProductListResponse[]>([])
   const [related, setRelated] = useState<ProductListResponse[]>([])
 
   const loadProducts = useCallback(async (page = 0, filters?: ProductFilters) => {
-    const data = await listApi.execute(() => productsApi.getProducts(page, 12, filters))
+    const data = await executeList(() => productsApi.getProducts(page, 12, filters))
     setProducts(data.content)
-  }, [])
+  }, [executeList])
 
   const loadMoreProducts = useCallback(async (page = 0, filters?: ProductFilters) => {
-    const data = await listApi.execute(() => productsApi.getProducts(page, 12, filters))
+    const data = await executeList(() => productsApi.getProducts(page, 12, filters))
     setProducts(prev => page === 0 ? data.content : [...prev, ...data.content])
-  }, [])
+  }, [executeList])
 
   const loadPopular = useCallback(async () => {
-    const data = await popularApi.execute(() => productsApi.getPopularProducts())
+    const data = await executePopular(() => productsApi.getPopularProducts())
     if (data) setPopular(data)
-  }, [])
+  }, [executePopular])
 
   const loadRelated = useCallback(async (id: number) => {
-    const data = await relatedApi.execute(() => productsApi.getRelatedProducts(id))
+    const data = await executeRelated(() => productsApi.getRelatedProducts(id))
     if (data) setRelated(data)
-  }, [])
+  }, [executeRelated])
 
   const getProduct = (id: number) => itemApi.execute(() => productsApi.getProduct(id))
 

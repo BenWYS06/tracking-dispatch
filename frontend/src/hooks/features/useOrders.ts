@@ -5,10 +5,11 @@ import type { CreateOrderRequest, OrderResponse } from '../../types'
 
 export function useOrders() {
   const createApi = useApi<OrderResponse>()
+  const { execute } = createApi
 
   const createOrder = useCallback((data: CreateOrderRequest) => {
-    return createApi.execute(() => ordersApi.createOrder(data))
-  }, [])
+    return execute(() => ordersApi.createOrder(data))
+  }, [execute])
 
   return {
     createOrder,
