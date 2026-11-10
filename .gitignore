@@ -5,3 +5,11 @@ Thumbs.db
 .env
 docker-compose.override.yml
 .gradle-user-home/
+
+# JVM crash dumps
+hs_err_pid*.log
+
+# Local helper scripts / scratch files (not part of the project)
+/scripts/
+/push_order.txt
+/node
