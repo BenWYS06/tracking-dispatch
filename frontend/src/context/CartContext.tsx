@@ -3,6 +3,7 @@ import {
   useContext,
   useState,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 
@@ -68,13 +69,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("cart");
   }, []);
 
-  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const count = items.reduce((sum, i) => sum + i.quantity, 0);
+  const value = useMemo(
+    () => ({
+      items,
+      addItem,
+      removeItem,
+      clearCart,
+      total: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      count: items.reduce((sum, i) => sum + i.quantity, 0),
+    }),
+    [items, addItem, removeItem, clearCart],
+  );
 
   return (
-    <CartContext.Provider
-      value={{ items, addItem, removeItem, clearCart, total, count }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
