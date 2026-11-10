@@ -6,30 +6,32 @@ import type { Page } from '../../types/common'
 
 export function useReviews() {
   const listApi = useApi<Page<ReviewResponse>>()
+  const { execute: executeList } = listApi
   const createApi = useApi<ReviewResponse>()
-  const updateApi = useApi<ReviewResponse>()
-  const replyApi = useApi<ReviewReplyResponse>()
-  const updateReplyApi = useApi<ReviewReplyResponse>()
+  const { execute: executeCreate } = createApi
+  const { execute: executeUpdate } = useApi<ReviewResponse>()
+  const { execute: executeReply } = useApi<ReviewReplyResponse>()
+  const { execute: executeUpdateReply } = useApi<ReviewReplyResponse>()
 
   const loadReviews = useCallback((productId: number, page = 0) => {
-    return listApi.execute(() => reviewsApi.getReviews(productId, page))
-  }, [])
+    return executeList(() => reviewsApi.getReviews(productId, page))
+  }, [executeList])
 
   const createReview = useCallback((data: CreateReviewRequest) => {
-    return createApi.execute(() => reviewsApi.createReview(data))
-  }, [])
+    return executeCreate(() => reviewsApi.createReview(data))
+  }, [executeCreate])
 
   const updateReview = useCallback((id: number, data: CreateReviewRequest) => {
-    return updateApi.execute(() => reviewsApi.updateReview(id, data))
-  }, [])
+    return executeUpdate(() => reviewsApi.updateReview(id, data))
+  }, [executeUpdate])
 
   const addReply = useCallback((reviewId: number, data: CreateReviewReplyRequest) => {
-    return replyApi.execute(() => reviewsApi.addReply(reviewId, data))
-  }, [])
+    return executeReply(() => reviewsApi.addReply(reviewId, data))
+  }, [executeReply])
 
   const updateReply = useCallback((replyId: number, data: CreateReviewReplyRequest) => {
-    return updateReplyApi.execute(() => reviewsApi.updateReply(replyId, data))
-  }, [])
+    return executeUpdateReply(() => reviewsApi.updateReply(replyId, data))
+  }, [executeUpdateReply])
 
   const deleteReply = useCallback((replyId: number) => {
     return reviewsApi.deleteReply(replyId)
