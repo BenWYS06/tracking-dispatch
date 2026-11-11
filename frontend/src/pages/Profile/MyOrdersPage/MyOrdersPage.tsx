@@ -6,6 +6,7 @@ import Loading from "../../../components/UI/Loading/Loading";
 import Pagination from "../../../components/UI/Pagination/Pagination";
 import type { UserOrderResponse } from "../../../types";
 import type { Page } from "../../../types/common";
+import type { OrderStatusUpdateResponse } from "../../../types/order";
 import {
   ORDER_STATUS_COLORS,
   ORDER_STATUS_LABELS,
@@ -27,14 +28,21 @@ export default function MyOrdersPage() {
     execute(() => ordersApi.getMyOrders(page)).then((res) =>
       setOrders(res.content),
     );
-  }, [page]);
+  }, [execute, page]);
+
+  // Resubscribe whenever the set of visible orders changes (e.g. switching
+  // pages), not only when the number of orders changes.
+  const orderIdsKey = orders.map((o) => o.id).join(",");
 
   useEffect(() => {
+    if (!orderIdsKey) return;
+    const orderIds = orderIdsKey.split(",");
+
     const client = createStompClient({
       onConnect: () => {
-        orders.forEach((order) => {
-          client.subscribe(`/topic/orders/${order.id}`, (message) => {
-            const update = JSON.parse(message.body);
+        orderIds.forEach((orderId) => {
+          client.subscribe(`/topic/orders/${orderId}`, (message) => {
+            const update: OrderStatusUpdateResponse = JSON.parse(message.body);
             setOrders((prev) =>
               prev.map((o) =>
                 o.id === update.orderId ? { ...o, status: update.status } : o,
@@ -50,7 +58,7 @@ export default function MyOrdersPage() {
     return () => {
       client.deactivate();
     };
-  }, [orders.length]);
+  }, [orderIdsKey]);
 
   const handlePay = async (order: UserOrderResponse) => {
     setPayLoading(order.id);
