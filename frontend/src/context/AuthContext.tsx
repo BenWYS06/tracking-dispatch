@@ -25,12 +25,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchedRef = useRef(false);
   const loading = initialLoading;
 
-  const token = localStorage.getItem("token");
   const isAuthenticated = !!user;
   const isAdmin = user?.userRole === "ADMIN";
   const isCourier = user?.userRole === "COURIER";
 
+  // Restore the session once on app start from a previously stored token.
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token && !fetchedRef.current) {
       fetchedRef.current = true;
       usersApi
