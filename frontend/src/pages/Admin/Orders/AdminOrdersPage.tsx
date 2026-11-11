@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAdminOrders } from "../../../hooks/features/useAdminOrders";
 import { useNotification } from "../../../context/NotificationContext";
 import * as ordersApi from "../../../api/orders";
@@ -69,18 +69,19 @@ export default function AdminOrdersPage() {
   const [dispatchingOrderId, setDispatchingOrderId] = useState<number | null>(
     null,
   );
-  useEffect(() => {
-    loadOrders(0);
-  }, []);
-
-  useEffect(() => {
+  // Reload the current page with the active filters.
+  const reloadOrders = useCallback(() => {
     loadOrders(page, 12, {
       status: statusFilter || undefined,
       deliveryMethod: deliveryFilter || undefined,
       paymentMethod: paymentFilter || undefined,
       search: search || undefined,
     });
-  }, [page, statusFilter, deliveryFilter, paymentFilter, search]);
+  }, [loadOrders, page, statusFilter, deliveryFilter, paymentFilter, search]);
+
+  useEffect(() => {
+    reloadOrders();
+  }, [reloadOrders]);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -96,21 +97,12 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     const client = createStompClient({
       onConnect: () => {
-        const refreshOrders = () => {
-          loadOrders(page, 12, {
-            status: statusFilter || undefined,
-            deliveryMethod: deliveryFilter || undefined,
-            paymentMethod: paymentFilter || undefined,
-            search: search || undefined,
-          });
-        };
-
         // Customer created a new order.
-        client.subscribe("/topic/orders/new", refreshOrders);
+        client.subscribe("/topic/orders/new", reloadOrders);
 
         // Admin dispatched order, courier delivered order,
         // or another staff member changed an order status.
-        client.subscribe("/topic/orders/changed", refreshOrders);
+        client.subscribe("/topic/orders/changed", reloadOrders);
       },
     });
     client.activate();
@@ -119,7 +111,7 @@ export default function AdminOrdersPage() {
     return () => {
       client.deactivate();
     };
-  }, [page, statusFilter, deliveryFilter, paymentFilter, search]);
+  }, [reloadOrders]);
 
   const handleStatusChange = async (
     orderId: number,
@@ -131,12 +123,7 @@ export default function AdminOrdersPage() {
         `Order #${orderId} → ${ORDER_STATUS_LABELS[newStatus]}`,
         "success",
       );
-      loadOrders(page, 12, {
-        status: statusFilter || undefined,
-        deliveryMethod: deliveryFilter || undefined,
-        paymentMethod: paymentFilter || undefined,
-        search: search || undefined,
-      });
+      reloadOrders();
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
@@ -160,12 +147,7 @@ export default function AdminOrdersPage() {
 
       showNotification(`Order #${orderId} is now delivering`, "success");
 
-      loadOrders(page, 12, {
-        status: statusFilter || undefined,
-        deliveryMethod: deliveryFilter || undefined,
-        paymentMethod: paymentFilter || undefined,
-        search: search || undefined,
-      });
+      reloadOrders();
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
