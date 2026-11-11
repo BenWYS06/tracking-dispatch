@@ -36,7 +36,7 @@ src/
 ├── context/      # Auth, Cart and Notification providers
 ├── hooks/
 │   ├── common/   # Generic hooks (useApi, usePagination, useTheme…)
-│   └── features/ # Domain hooks (useProducts, useOrders, useWebSocket…)
+│   └── features/ # Domain hooks (useProducts, useOrders, useAudit…)
 ├── layout/       # Page shells (header / footer)
 ├── pages/        # Route-level components
 ├── styles/       # Global CSS variables
