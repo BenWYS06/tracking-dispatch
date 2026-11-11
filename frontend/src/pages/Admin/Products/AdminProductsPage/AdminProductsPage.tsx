@@ -31,7 +31,7 @@ export default function AdminProductsPage() {
       category: categoryFilter || undefined,
       available: availableFilter === "" ? undefined : availableFilter,
     });
-  }, [page, search, categoryFilter, availableFilter]);
+  }, [loadProducts, page, search, categoryFilter, availableFilter]);
 
   const handleDelete = async () => {
     if (!deleteId) return;
