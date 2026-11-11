@@ -11,8 +11,8 @@ import {
   ORDER_STATUS_LABELS,
   PAYMENT_STATUS_LABELS,
 } from "../../../types/enums";
-import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import type { Client } from "@stomp/stompjs";
+import { createStompClient } from "../../../api/ws";
 import styles from "./MyOrdersPage.module.css";
 
 export default function MyOrdersPage() {
@@ -30,8 +30,7 @@ export default function MyOrdersPage() {
   }, [page]);
 
   useEffect(() => {
-    const client = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    const client = createStompClient({
       onConnect: () => {
         orders.forEach((order) => {
           client.subscribe(`/topic/orders/${order.id}`, (message) => {

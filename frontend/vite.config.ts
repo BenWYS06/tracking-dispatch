@@ -16,7 +16,7 @@ export default defineConfig({
         xfwd: true,
       },
       '/ws': {
-        target: 'ws://localhost:8080',
+        target: 'http://localhost:8080',
         ws: true
       }
     }

@@ -19,8 +19,8 @@ import {
   ORDER_STATUS_LABELS,
   PAYMENT_STATUS_LABELS,
 } from "../../../types/enums";
-import { Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import type { Client } from "@stomp/stompjs";
+import { createStompClient } from "../../../api/ws";
 import styles from "./AdminOrdersPage.module.css";
 
 const getStatusFlow = (
@@ -94,8 +94,7 @@ export default function AdminOrdersPage() {
   }, [isAdmin, showNotification]);
 
   useEffect(() => {
-    const client = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    const client = createStompClient({
       onConnect: () => {
         const refreshOrders = () => {
           loadOrders(page, 12, {
