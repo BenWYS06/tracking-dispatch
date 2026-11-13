@@ -19,7 +19,9 @@ public class TokenCleanupScheduler {
     @Scheduled(cron = "0 0 3 * * *")
     @Transactional
     public void cleanupExpiredTokens() {
-        int deleted = tokenRepository.deleteAllByExpiryDateBeforeAndUsedFalse(LocalDateTime.now());
-        log.info("Cleaned up {} expired unused tokens", deleted);
+        // Used and invalidated tokens are never valid again, so expired ones of
+        // any state can go; otherwise the table only ever grows.
+        int deleted = tokenRepository.deleteAllByExpiryDateBefore(LocalDateTime.now());
+        log.info("Cleaned up {} expired tokens", deleted);
     }
 }

@@ -17,6 +17,6 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     void invalidateAllByUserAndType(@Param("userId") Long userId, @Param("type") TokenType type);
 
     @Modifying
-    @Query("DELETE FROM Token t WHERE t.expiryDate < :now AND t.used = false")
-    int deleteAllByExpiryDateBeforeAndUsedFalse(@Param("now") LocalDateTime now);
+    @Query("DELETE FROM Token t WHERE t.expiryDate < :now")
+    int deleteAllByExpiryDateBefore(@Param("now") LocalDateTime now);
 }
