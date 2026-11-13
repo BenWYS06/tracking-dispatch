@@ -156,15 +156,39 @@ See [`.env.example`](.env.example) for all available variables.
 
 ---
 
-## Testing
-
 The optional AI setup is documented in [docs/ai-rag.md](docs/ai-rag.md) and
 [docs/ai-agent.md](docs/ai-agent.md).
+
+---
+
+## Testing
 
 - **Unit tests:** JUnit 5 + Mockito — services, mappers, validators, aspects
 - **Integration tests:** Testcontainers with real PostgreSQL — Flyway migrations, repository queries
 - **Controller tests:** MockMvc — REST API endpoints
 - **Rate limiting tests:** Bucket4j token bucket behavior
+
+```bash
+cd backend && ./gradlew test        # backend tests
+cd frontend && npm run lint         # frontend lint
+```
+
+---
+
+## CI/CD
+
+GitHub Actions runs a separate pipeline per app, triggered only when that
+app's files change:
+
+| Workflow   | Steps                                                    |
+| ---------- | -------------------------------------------------------- |
+| `Frontend` | `npm ci` → lint → type-check & build → Docker image      |
+| `Backend`  | Gradle test & build → Docker image                       |
+
+Pull requests build the Docker image without pushing it. Pushes to `main`
+publish `sushi-frontend` / `sushi-backend` to Docker Hub, tagged `latest` and
+with the commit SHA (requires `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
+repository secrets).
 
 ---
 
