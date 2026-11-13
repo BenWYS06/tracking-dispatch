@@ -35,7 +35,7 @@ src/
 ├── components/   # Reusable UI, grouped by feature (Home, Product, Admin, UI…)
 ├── context/      # Auth, Cart and Notification providers
 ├── hooks/
-│   ├── common/   # Generic hooks (useApi, usePagination, useTheme…)
+│   ├── common/   # Generic hooks (useApi, useDelayedLoading, useTheme)
 │   └── features/ # Domain hooks (useProducts, useOrders, useAudit…)
 ├── layout/       # Page shells (header / footer)
 ├── pages/        # Route-level components
