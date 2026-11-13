@@ -30,7 +30,8 @@ export default function Login() {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google'
+    // Relative so it goes through the Vite / nginx proxy in every environment.
+    window.location.href = '/oauth2/authorization/google'
   }
 
   return (

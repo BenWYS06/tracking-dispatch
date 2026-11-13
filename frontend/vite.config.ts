@@ -15,6 +15,13 @@ export default defineConfig({
         changeOrigin: true,
         xfwd: true,
       },
+      // Starts the Google login on the backend. changeOrigin keeps the
+      // backend's {baseUrl} as localhost:8080, so Google's registered
+      // callback URL stays the same in dev.
+      '/oauth2': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/ws': {
         target: 'http://localhost:8080',
         ws: true
