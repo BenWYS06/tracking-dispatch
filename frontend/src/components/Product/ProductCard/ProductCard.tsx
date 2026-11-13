@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { CATEGORY_DISPLAY } from "../../../types/enums";
+import { PRODUCT_PLACEHOLDER_IMAGE } from "../../../constants";
 import type { ProductListResponse } from "../../../types";
 import styles from "./ProductCard.module.css";
 
@@ -12,7 +13,7 @@ export default function ProductCard({ product }: Props) {
   return (
     <Link to={`/products/${product.slug}`} className={styles.card}>
       <div className={styles.image}>
-        <img src={product.mainImage || "/placeholder.jpg"} alt={product.name} />
+        <img src={product.mainImage || PRODUCT_PLACEHOLDER_IMAGE} alt={product.name} />
         {!product.available && (
           <span className={styles.badge}>Unavailable</span>
         )}

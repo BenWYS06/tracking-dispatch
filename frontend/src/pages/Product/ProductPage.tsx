@@ -17,6 +17,7 @@ import ProductSkeleton from "../../components/Product/ProductSkeleton/ProductSke
 import Button from "../../components/UI/Button/Button";
 import ReviewSection from "../../components/Product/ReviewSection/ReviewSection";
 import RelatedProducts from "../../components/Product/RelatedProducts/RelatedProducts";
+import { PRODUCT_PLACEHOLDER_IMAGE } from "../../constants";
 import styles from "./ProductPage.module.css";
 
 export default function ProductPage() {
@@ -85,7 +86,7 @@ export default function ProductPage() {
           <div className={styles.mainImageWrapper}>
             <Zoom>
               <img
-                src={product.images[activeImage]?.url || "/placeholder.jpg"}
+                src={product.images[activeImage]?.url || PRODUCT_PLACEHOLDER_IMAGE}
                 alt={product.name}
                 className={styles.mainImage}
               />
