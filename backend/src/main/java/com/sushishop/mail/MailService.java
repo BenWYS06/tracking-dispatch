@@ -59,9 +59,17 @@ public class MailService {
 
         try {
             mailSender.send(message);
-            log.info("{} email sent to {}", subject, to);
+            log.info("{} email sent to {}", subject, maskEmail(to));
         } catch (Exception e) {
-            log.error("Failed to send {} email to {}: {}", subject, to, e.getMessage());
+            log.error("Failed to send {} email to {}", subject, maskEmail(to), e);
         }
+    }
+
+    /** Keep customer addresses out of logs: "john.doe@mail.com" -> "j***@mail.com". */
+    static String maskEmail(String email) {
+        if (email == null) return null;
+        int at = email.indexOf('@');
+        if (at <= 0) return "***";
+        return email.charAt(0) + "***" + email.substring(at);
     }
 }
