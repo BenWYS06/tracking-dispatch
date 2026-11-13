@@ -51,10 +51,11 @@ function SortableImage({ img, onRemove }: SortableImageProps) {
 
   return (
     <div ref={setNodeRef} style={style} className={styles.imageItem}>
-      <img src={img.url} alt="" />
+      <img src={img.url} alt={`Product image ${img.id}`} />
       <button
         type="button"
         className={styles.dragHandle}
+        aria-label="Drag to reorder image"
         {...attributes}
         {...listeners}
       >

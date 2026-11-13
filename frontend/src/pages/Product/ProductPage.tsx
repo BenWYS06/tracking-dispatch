@@ -94,13 +94,17 @@ export default function ProductPage() {
             {product.images.length > 1 && (
               <>
                 <button
+                  type="button"
                   onClick={prevImage}
+                  aria-label="Previous image"
                   className={`${styles.arrow} ${styles.arrowLeft}`}
                 >
                   <ChevronLeft size={24} />
                 </button>
                 <button
+                  type="button"
                   onClick={nextImage}
+                  aria-label="Next image"
                   className={`${styles.arrow} ${styles.arrowRight}`}
                 >
                   <ChevronRight size={24} />
