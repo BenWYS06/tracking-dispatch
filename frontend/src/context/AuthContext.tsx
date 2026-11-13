@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as authApi from "../api/auth";
 import * as usersApi from "../api/user";
 import type { UserResponse, LoginRequest, RegisterRequest } from "../types";
@@ -47,51 +55,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  const login = async (credentials: LoginRequest) => {
+  const login = useCallback(async (credentials: LoginRequest) => {
     const response = await authApi.login(credentials);
     localStorage.setItem("token", response.token);
     fetchedRef.current = true;
     setUser(response.user);
-  };
+  }, []);
 
-  const register = async (userData: RegisterRequest) => {
+  const register = useCallback(async (userData: RegisterRequest) => {
     const response = await authApi.register(userData);
     localStorage.setItem("token", response.token);
     fetchedRef.current = true;
     setUser(response.user);
     return response.user;
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
     fetchedRef.current = false;
     window.location.href = "/login";
-  };
+  }, []);
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     try {
       const data = await usersApi.getMe();
       setUser(data);
     } catch {
       logout();
     }
-  };
+  }, [logout]);
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthenticated,
+      isAdmin,
+      isCourier,
+      login,
+      register,
+      logout,
+      refreshUser,
+    }),
+    [user, loading, isAuthenticated, isAdmin, isCourier, login, register, logout, refreshUser],
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        isAuthenticated,
-        isAdmin,
-        isCourier,
-        login,
-        register,
-        logout,
-        refreshUser,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
