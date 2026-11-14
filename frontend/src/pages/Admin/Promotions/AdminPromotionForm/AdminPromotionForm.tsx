@@ -199,14 +199,16 @@ export default function AdminPromotionForm() {
           {selectedProductIds.length > 0 && (
             <div className={styles.selectedList}>
               {selectedProductIds.map((pid) => (
-                <span
+                <button
+                  type="button"
                   key={pid}
                   className={styles.selectedTag}
                   onClick={() => removeSelected(pid)}
+                  aria-label={`Remove ${selectedProductNames[pid] || `product #${pid}`}`}
                 >
                   {selectedProductNames[pid] || `#${pid}`}
-                  <X size={12} />
-                </span>
+                  <X size={12} aria-hidden="true" />
+                </button>
               ))}
             </div>
           )}

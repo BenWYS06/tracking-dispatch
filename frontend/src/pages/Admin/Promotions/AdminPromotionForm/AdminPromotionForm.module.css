@@ -194,12 +194,14 @@
   border: 1px solid rgba(var(--color-primary-rgb), 0.2);
   border-radius: 20px;
   font-size: 13px;
+  font-family: inherit;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.selectedTag:hover {
+.selectedTag:hover,
+.selectedTag:focus-visible {
   background: rgba(239, 68, 68, 0.12);
   color: #ef4444;
   border-color: rgba(239, 68, 68, 0.2);
