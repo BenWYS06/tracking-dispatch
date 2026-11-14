@@ -203,6 +203,7 @@ export default function AdminProductsPage() {
                           setDeleteName(product.name);
                         }}
                         className={styles.deleteBtn}
+                        aria-label="Delete product"
                       >
                         <Trash2 size={16} />
                       </button>

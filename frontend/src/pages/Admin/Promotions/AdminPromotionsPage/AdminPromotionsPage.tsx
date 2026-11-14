@@ -135,6 +135,7 @@ export default function AdminPromotionsPage() {
                             setDeleteTitle(promo.title);
                           }}
                           className={styles.deleteBtn}
+                          aria-label="Delete promotion"
                         >
                           <Trash2 size={16} />
                         </button>

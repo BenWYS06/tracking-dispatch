@@ -55,6 +55,7 @@ export default function CartPage() {
               </span>
               <button
                 onClick={() => removeItem(item.productId)}
+                aria-label="Remove from cart"
                 className={styles.removeBtn}
               >
                 <Trash2 size={16} />

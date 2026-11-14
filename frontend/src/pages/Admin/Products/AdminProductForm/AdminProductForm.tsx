@@ -64,6 +64,7 @@ function SortableImage({ img, onRemove }: SortableImageProps) {
       <button
         type="button"
         onClick={() => onRemove(img.id)}
+        aria-label="Remove image"
         className={styles.removeBtn}
       >
         <X size={14} />
@@ -254,6 +255,7 @@ export default function AdminProductForm() {
                       <button
                         type="button"
                         onClick={() => handleRemoveNewImage(index)}
+                        aria-label="Remove image"
                         className={styles.removeBtn}
                       >
                         <X size={14} />

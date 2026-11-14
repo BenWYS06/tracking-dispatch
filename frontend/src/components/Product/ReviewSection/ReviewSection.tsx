@@ -219,12 +219,14 @@ export default function ReviewSection({ productId }: Props) {
                   <div className={styles.actions}>
                     <button
                       onClick={() => startEdit(review)}
+                      aria-label="Edit review"
                       className={styles.editBtn}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => setDeleteId(review.id)}
+                      aria-label="Delete review"
                       className={styles.deleteBtn}
                     >
                       <Trash2 size={14} />
@@ -292,12 +294,14 @@ export default function ReviewSection({ productId }: Props) {
                           <div className={styles.actions}>
                             <button
                               onClick={() => startEditReply(reply)}
+                              aria-label="Edit reply"
                               className={styles.editBtn}
                             >
                               <Pencil size={12} />
                             </button>
                             <button
                               onClick={() => setDeleteReplyId(reply.id)}
+                              aria-label="Delete reply"
                               className={styles.deleteBtn}
                             >
                               <Trash2 size={12} />
