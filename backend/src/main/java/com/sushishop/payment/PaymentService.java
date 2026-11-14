@@ -54,8 +54,11 @@ public class PaymentService {
         var payment = paymentRepository.findByStripeSessionId(stripeSessionId)
                 .orElseThrow(() -> new NotFoundException("Payment not found"));
 
+        // Stripe delivers webhooks at least once; treat repeats as a no-op
+        // instead of failing, which would make Stripe keep retrying.
         if (payment.getStatus() == PaymentStatus.PAID) {
-            throw new BadRequestException("Payment already confirmed");
+            log.info("Payment already confirmed, ignoring duplicate webhook: {}", stripeSessionId);
+            return;
         }
 
         payment.setStatus(PaymentStatus.PAID);
