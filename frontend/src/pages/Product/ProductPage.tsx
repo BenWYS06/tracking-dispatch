@@ -18,6 +18,7 @@ import Button from "../../components/UI/Button/Button";
 import ReviewSection from "../../components/Product/ReviewSection/ReviewSection";
 import RelatedProducts from "../../components/Product/RelatedProducts/RelatedProducts";
 import { PRODUCT_PLACEHOLDER_IMAGE } from "../../constants";
+import { formatPrice } from "../../utils/format";
 import styles from "./ProductPage.module.css";
 
 export default function ProductPage() {
@@ -146,14 +147,14 @@ export default function ProductPage() {
           <div className={styles.priceRow}>
             {discounted && (
               <>
-                <span className={styles.oldPrice}>{product.price}₴</span>
+                <span className={styles.oldPrice}>{formatPrice(product.price)}</span>
                 <span className={styles.discount}>
                   -{product.discountPercent}%
                 </span>
               </>
             )}
             <span className={styles.price}>
-              {product.discountedPrice || product.price}₴
+              {formatPrice(product.discountedPrice || product.price)}
             </span>
           </div>
 
@@ -187,7 +188,7 @@ export default function ProductPage() {
             </div>
             <Button onClick={handleAddToCart} className={styles.addBtn}>
               <ShoppingCart size={18} /> Add to Cart —{" "}
-              {(product.discountedPrice || product.price) * quantity}₴
+              {formatPrice((product.discountedPrice || product.price) * quantity)}
             </Button>
           </div>
         </div>
