@@ -69,16 +69,18 @@ public class TokenService {
         var tokenEntity = tokenRepository.findByToken(tokenValue)
                 .orElseThrow(() -> new BadRequestException("Invalid or expired token"));
 
+        // Check the type first so a token of another kind (e.g. a reset token
+        // sent to the verify endpoint) doesn't reveal whether it's used/expired.
+        if (tokenEntity.getTokenType() != expectedType) {
+            throw new BadRequestException("Invalid token type");
+        }
+
         if (tokenEntity.isUsed()) {
             throw new BadRequestException("Token already used");
         }
 
         if (tokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Token expired");
-        }
-
-        if (tokenEntity.getTokenType() != expectedType) {
-            throw new BadRequestException("Invalid token type");
         }
 
         return tokenEntity;
