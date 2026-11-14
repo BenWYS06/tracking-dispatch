@@ -55,6 +55,10 @@ Order.status = CONFIRMED   <-- set directly, does NOT run validateTransition
 If payment never completes, the order just stays at `NEW` (or gets cancelled manually). The webhook path only
 ever produces `PENDING` -> `PAID`; there's no automatic `FAILED` handling wired up.
 
+Stripe delivers webhooks at least once, so the same `checkout.session.completed` can arrive twice.
+`confirmPayment` treats a repeat for an already `PAID` payment as a no-op (logged, `200 OK`, no second
+`PaymentConfirmedEvent`), so Stripe stops retrying and the order isn't confirmed twice.
+
 ## 3. After CONFIRMED, deliveryMethod decides the branch
 
 ```text
