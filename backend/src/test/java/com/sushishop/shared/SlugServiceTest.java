@@ -54,6 +54,12 @@ public class SlugServiceTest {
     }
 
     @Test
+    public void shouldFallBackWhenNameHasNoLatinCharacters() {
+        assertThat(slugService.generateUniqueSlug("Філадельфія", slug -> false)).isEqualTo("item");
+        assertThat(slugService.generateUniqueSlug("Філадельфія", "item"::equals)).isEqualTo("item-1");
+    }
+
+    @Test
     public void shouldReturnEmptyForNullInput() {
         var result = slugService.generateSlug(null);
         assertThat(result).isEqualTo("");

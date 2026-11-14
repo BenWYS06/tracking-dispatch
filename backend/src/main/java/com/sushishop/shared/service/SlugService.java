@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 public class SlugService {
 
     private static final int MAX_SLUG_LENGTH = 100;
+    private static final String FALLBACK_SLUG = "item";
 
     public String generateSlug(String input) {
         if (input == null || input.isBlank()) {
@@ -30,8 +31,16 @@ public class SlugService {
         return slug;
     }
 
+    /**
+     * Generates a slug that doesn't exist yet by appending "-1", "-2", ...
+     * Names without any Latin letters or digits (e.g. Cyrillic only) produce an
+     * empty base slug, so {@value #FALLBACK_SLUG} is used instead of "" / "-1".
+     */
     public String generateUniqueSlug(String input, Predicate<String> slugExists) {
         var baseSlug = generateSlug(input);
+        if (baseSlug.isEmpty()) {
+            baseSlug = FALLBACK_SLUG;
+        }
         var uniqueSlug = baseSlug;
         int counter = 1;
 
