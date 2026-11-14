@@ -39,6 +39,7 @@ export default function CartPage() {
             {item.mainImage && (
               <img
                 src={item.mainImage}
+                loading="lazy"
                 alt={item.name}
                 className={styles.itemImage}
               />

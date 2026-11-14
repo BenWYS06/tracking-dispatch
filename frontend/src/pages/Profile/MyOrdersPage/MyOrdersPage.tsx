@@ -157,6 +157,7 @@ export default function MyOrdersPage() {
                           {item.mainImage && (
                             <img
                               src={item.mainImage}
+                              loading="lazy"
                               alt={item.productName}
                               className={styles.itemImage}
                             />

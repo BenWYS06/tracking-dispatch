@@ -384,6 +384,7 @@ export default function AdminOrdersPage() {
                                   {item.mainImage && (
                                     <img
                                       src={item.mainImage}
+                                      loading="lazy"
                                       alt={item.productName}
                                       className={styles.itemImage}
                                     />

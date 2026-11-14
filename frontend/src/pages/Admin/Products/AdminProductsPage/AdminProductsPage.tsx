@@ -154,6 +154,7 @@ export default function AdminProductsPage() {
                     {product.mainImage ? (
                       <img
                         src={product.mainImage}
+                        loading="lazy"
                         alt={product.name}
                         className={styles.thumb}
                       />

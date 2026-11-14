@@ -14,7 +14,11 @@ export default function ProductCard({ product }: Props) {
   return (
     <Link to={`/products/${product.slug}`} className={styles.card}>
       <div className={styles.image}>
-        <img src={product.mainImage || PRODUCT_PLACEHOLDER_IMAGE} alt={product.name} />
+        <img
+          src={product.mainImage || PRODUCT_PLACEHOLDER_IMAGE}
+          alt={product.name}
+          loading="lazy"
+        />
         {!product.available && (
           <span className={styles.badge}>Unavailable</span>
         )}
