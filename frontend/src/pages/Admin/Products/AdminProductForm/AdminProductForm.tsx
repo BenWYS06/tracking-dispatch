@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
 import { useProducts } from "../../../../hooks/features/useProducts";
@@ -87,6 +87,16 @@ export default function AdminProductForm() {
   const [weight, setWeight] = useState("");
   const [pieces, setPieces] = useState("");
   const [images, setImages] = useState<File[]>([]);
+  // Create blob URLs once per file list and revoke them when it changes,
+  // instead of leaking a new URL on every render.
+  const imagePreviews = useMemo(
+    () => images.map((file) => URL.createObjectURL(file)),
+    [images],
+  );
+  useEffect(
+    () => () => imagePreviews.forEach((url) => URL.revokeObjectURL(url)),
+    [imagePreviews],
+  );
   const [existingImages, setExistingImages] = useState<ProductImageResponse[]>(
     [],
   );
@@ -240,7 +250,7 @@ export default function AdminProductForm() {
                   ))}
                   {images.map((file, index) => (
                     <div key={`new-${index}`} className={styles.imageItem}>
-                      <img src={URL.createObjectURL(file)} alt="" />
+                      <img src={imagePreviews[index]} alt={file.name} />
                       <button
                         type="button"
                         onClick={() => handleRemoveNewImage(index)}
