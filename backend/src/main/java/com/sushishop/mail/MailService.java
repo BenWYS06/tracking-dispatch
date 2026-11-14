@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService {
 
+    private static final String SHOP_NAME = "Sushi Bas Shop";
+
     private final JavaMailSender mailSender;
 
     @Value("${app.base-url}")
@@ -21,7 +23,7 @@ public class MailService {
 
     @Async
     public void sendVerificationEmail(String to, String token) {
-        sendStyledEmail(to, "Verify your Sushi Bas Shop account",
+        sendStyledEmail(to, "Verify your " + SHOP_NAME + " account",
                 "Welcome!",
                 "Thanks for creating an account. Click the button below to verify your email address.",
                 "Verify Email",
@@ -30,7 +32,7 @@ public class MailService {
 
     @Async
     public void sendPasswordResetEmail(String to, String token) {
-        sendStyledEmail(to, "Reset your Sushi Bas Shop password",
+        sendStyledEmail(to, "Reset your " + SHOP_NAME + " password",
                 "Reset Password",
                 "Click the button below to reset your password.",
                 "Reset Password",
@@ -45,7 +47,7 @@ public class MailService {
             helper.setText("""
                     <div style="max-width:480px;margin:0 auto;font-family:Arial,sans-serif;color:#1a1a1a">
                       <div style="background:#F97316;padding:24px;text-align:center;border-radius:12px 12px 0 0">
-                        <h1 style="color:#fff;margin:0;font-size:24px">Sushi Bas Shop</h1>
+                        <h1 style="color:#fff;margin:0;font-size:24px">%s</h1>
                       </div>
                       <div style="background:#fff;padding:32px 24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px">
                         <h2 style="margin:0 0 12px;font-size:20px">%s</h2>
@@ -54,7 +56,7 @@ public class MailService {
                         <p style="margin:24px 0 0;color:#9ca3af;font-size:13px">If you didn't request this, you can ignore this email.</p>
                       </div>
                     </div>
-                    """.formatted(title, body, buttonUrl, buttonText), true);
+                    """.formatted(SHOP_NAME, title, body, buttonUrl, buttonText), true);
         };
 
         try {
