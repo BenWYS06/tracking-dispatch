@@ -10,6 +10,7 @@ import Pagination from "../../../../components/UI/Pagination/Pagination";
 import Modal from "../../../../components/UI/Modal/Modal";
 import { CATEGORY_DISPLAY } from "../../../../types/enums";
 import type { Category } from "../../../../types";
+import { formatPrice } from "../../../../utils/format";
 import styles from "./AdminProductsPage.module.css";
 
 export default function AdminProductsPage() {
@@ -172,7 +173,7 @@ export default function AdminProductsPage() {
                       : "—"}
                   </td>
                   <td>{product.pieces ? `${product.pieces} pcs` : "—"}</td>
-                  <td>{product.price}₴</td>
+                  <td>{formatPrice(product.price)}</td>
                   <td>
                     <button
                       onClick={() => handleToggle(product.id)}

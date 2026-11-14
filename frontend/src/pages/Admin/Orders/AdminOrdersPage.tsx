@@ -21,6 +21,7 @@ import {
 } from "../../../types/enums";
 import type { Client } from "@stomp/stompjs";
 import { createStompClient } from "../../../api/ws";
+import { formatPrice } from "../../../utils/format";
 import styles from "./AdminOrdersPage.module.css";
 
 const getStatusFlow = (
@@ -269,7 +270,7 @@ export default function AdminOrdersPage() {
                         {PAYMENT_STATUS_LABELS[order.paymentStatus] ||
                           order.paymentStatus}
                       </td>
-                      <td data-label="Total">{order.totalAmount}₴</td>
+                      <td data-label="Total">{formatPrice(order.totalAmount)}</td>
                       <td data-label="Status">
                         <span
                           className={styles.statusBadge}
@@ -390,7 +391,7 @@ export default function AdminOrdersPage() {
                                   <span>
                                     {item.productName} × {item.quantity}
                                   </span>
-                                  <span>{item.unitPrice * item.quantity}₴</span>
+                                  <span>{formatPrice(item.unitPrice * item.quantity)}</span>
                                 </div>
                               ))}
                             </div>
