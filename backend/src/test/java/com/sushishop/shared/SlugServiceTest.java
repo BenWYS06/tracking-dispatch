@@ -44,6 +44,16 @@ public class SlugServiceTest {
     }
 
     @Test
+    public void shouldNotEndWithHyphenAfterTruncation() {
+        // 99 chars + space: the cut at 100 lands right on the separator
+        var input = "a".repeat(99) + " roll";
+
+        var result = slugService.generateSlug(input);
+
+        assertThat(result).isEqualTo("a".repeat(99));
+    }
+
+    @Test
     public void shouldReturnEmptyForNullInput() {
         var result = slugService.generateSlug(null);
         assertThat(result).isEqualTo("");

@@ -23,7 +23,8 @@ public class SlugService {
                 .toLowerCase();
 
         if (slug.length() > MAX_SLUG_LENGTH) {
-            slug = slug.substring(0, MAX_SLUG_LENGTH);
+            // Cutting mid-name can leave a dangling "-" at the end.
+            slug = slug.substring(0, MAX_SLUG_LENGTH).replaceAll("-+$", "");
         }
 
         return slug;
