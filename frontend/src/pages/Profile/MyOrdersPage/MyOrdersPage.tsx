@@ -14,6 +14,7 @@ import {
 } from "../../../types/enums";
 import type { Client } from "@stomp/stompjs";
 import { createStompClient } from "../../../api/ws";
+import { formatPrice } from "../../../utils/format";
 import styles from "./MyOrdersPage.module.css";
 
 export default function MyOrdersPage() {
@@ -119,7 +120,7 @@ export default function MyOrdersPage() {
                         order.paymentStatus}
                     </span>
                     <span className={styles.orderTotal}>
-                      {order.totalAmount}₴
+                      {formatPrice(order.totalAmount)}
                     </span>
                     <span
                       className={styles.statusBadge}
@@ -163,7 +164,7 @@ export default function MyOrdersPage() {
                           <span>
                             {item.productName} × {item.quantity}
                           </span>
-                          <span>{item.unitPrice * item.quantity}₴</span>
+                          <span>{formatPrice(item.unitPrice * item.quantity)}</span>
                         </div>
                       ))}
                     </div>
