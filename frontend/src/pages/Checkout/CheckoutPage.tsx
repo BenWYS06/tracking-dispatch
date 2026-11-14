@@ -9,6 +9,7 @@ import * as paymentsApi from "../../api/payments";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import type { DeliveryMethod, PaymentMethod } from "../../types";
+import { formatPrice } from "../../utils/format";
 import styles from "./CheckoutPage.module.css";
 
 export default function CheckoutPage() {
@@ -209,13 +210,13 @@ export default function CheckoutPage() {
                 <span>
                   {item.name} × {item.quantity}
                 </span>
-                <span>{item.price * item.quantity}₴</span>
+                <span>{formatPrice(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
           <div className={styles.total}>
             <span>Total</span>
-            <span className={styles.totalPrice}>{total}₴</span>
+            <span className={styles.totalPrice}>{formatPrice(total)}</span>
           </div>
         </div>
         <Button
